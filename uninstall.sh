@@ -5,7 +5,7 @@ set -euo pipefail
 BEGIN="# >>> claudebro_panes >>>"
 END="# <<< claudebro_panes <<<"
 
-for f in "$HOME/.tmux.conf" "$HOME/.bashrc" "$HOME/.bash_aliases" "$HOME/.zshrc" "$HOME/.profile"; do
+for f in "$HOME/.tmux.conf" "$HOME/.bashrc" "$HOME/.bash_aliases" "$HOME/.zshrc" "$HOME/.profile" "$HOME/.claude/CLAUDE.md"; do
   [ -f "$f" ] || continue
   grep -qF "$BEGIN" "$f" || continue
   cp "$f" "$f.claudebro.bak.$(date +%Y%m%d%H%M%S)"

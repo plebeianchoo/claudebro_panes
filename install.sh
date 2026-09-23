@@ -23,6 +23,18 @@ add_block() {  # add_block <file> <line-to-source>
   echo "  added block to $file"
 }
 
+add_file_block() {  # add_file_block <file> <source-content-file>
+  local file="$1" src="$2"
+  if [ -f "$file" ] && grep -qF "$BEGIN" "$file"; then
+    echo "  already present in $file — skipping"
+    return 0
+  fi
+  mkdir -p "$(dirname "$file")"
+  backup "$file"
+  { echo; echo "$BEGIN"; cat "$src"; echo "$END"; } >> "$file"
+  echo "  added to $file"
+}
+
 command -v tmux >/dev/null || { echo "error: tmux not found in PATH" >&2; exit 1; }
 echo "tmux: $(tmux -V)"
 
@@ -44,6 +56,20 @@ for f in "$HOME/.bashrc" "$HOME/.bash_aliases" "$HOME/.zshrc" "$HOME/.profile"; 
 done
 add_block "$RC" ". $REPO/shell/ta.sh"
 
+echo
+echo "claude/USAGE.md tells Claude Code it runs in the top pane and how to"
+echo "drive the bottom one (find it by @role, send-keys / capture-pane)."
+if [ -t 0 ]; then
+  read -r -p "Add it to ~/.claude/CLAUDE.md now? [y/N] " ans
+else
+  ans=n
+  echo "  (non-interactive — skipping; add it yourself later if you want it)"
+fi
+case "$ans" in
+  [Yy]*) add_file_block "$HOME/.claude/CLAUDE.md" "$REPO/claude/USAGE.md" ;;
+  *)     echo "  skipped — see $REPO/claude/USAGE.md to add manually" ;;
+esac
+
 cat <<EOF
 
 Done. To use it now:
@@ -51,7 +77,4 @@ Done. To use it now:
   source $REPO/shell/ta.sh     # or: exec \$SHELL -l
   tmux source-file ~/.tmux.conf  # only if a tmux server is already running
   ta
-
-Optional: see claude/CLAUDE.snippet.md for the ~/.claude/CLAUDE.md section
-that tells Claude Code how to drive the bottom pane.
 EOF

@@ -28,8 +28,10 @@ ta
 
 `install.sh` appends a marked block to `~/.tmux.conf` and to your shell rc
 (`~/.zshrc` for zsh, otherwise `~/.bashrc`), each sourcing a file from this
-repo. It backs up anything it edits, is safe to re-run, and warns if `ta` is
-already defined elsewhere. `./uninstall.sh` removes both blocks.
+repo. It also asks whether to add `claude/USAGE.md` to `~/.claude/CLAUDE.md`,
+so Claude Code knows it runs in the top pane and how to drive the bottom
+one. It backs up anything it edits, is safe to re-run, and warns if `ta` is
+already defined elsewhere. `./uninstall.sh` removes everything it added.
 
 Keep the clone where it is — the rc files source out of it by absolute path.
 
@@ -71,5 +73,5 @@ single-pane windows.
 
     shell/ta.sh              the ta() function
     tmux/claudebro.conf      pane border status + labels
-    claude/CLAUDE.snippet.md optional ~/.claude/CLAUDE.md section
+    claude/USAGE.md          tells Claude Code it's in the top pane, how to drive the bottom
     install.sh / uninstall.sh
