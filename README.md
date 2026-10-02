@@ -79,6 +79,11 @@ directly, so it looks right whatever palette your terminal has (true colour
 needed). To keep tmux's own colours instead, add `set -g @claudebro_theme
 none` to `~/.tmux.conf` before the claudebro_panes block, and restart tmux.
 
+The status bar uses the official Nord port's Powerline arrow segments
+(U+E0B0–E0B3), which need a Powerline or Nerd Font in the terminal you
+connect from. If they show as boxes or `?`, add `set -g
+@claudebro_nord_glyphs off` there too for plain blocks (a reload is enough).
+
 The btop popup runs Nord too, from its own config file
 (`~/.config/btop/claudebro-popup.conf`, copied from your `btop.conf` on first
 use), so running `btop` directly keeps your usual theme.
