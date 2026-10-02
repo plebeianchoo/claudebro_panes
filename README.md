@@ -19,8 +19,8 @@ Requires tmux 3.1+ (for `split-window -l <n>%`; older versions fall back to
 the deprecated `-p`) and `bash` or `zsh`.
 
 ```sh
-git clone git@github.com:plebeianchoo/claudebro_panes.git ~/documents/claudebro_panes
-cd ~/documents/claudebro_panes
+git clone git@github.com:plebeianchoo/claudebro_panes.git ~/claudebro/claudebro_panes
+cd ~/claudebro/claudebro_panes
 ./install.sh
 exec $SHELL -l
 ta
