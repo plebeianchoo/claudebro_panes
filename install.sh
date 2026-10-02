@@ -24,12 +24,21 @@ add_block() {  # add_block <file> <line-to-source>
 }
 
 add_file_block() {  # add_file_block <file> <source-content-file>
+  # Unlike add_block, an existing block is replaced rather than skipped, so
+  # re-running install.sh after a pull brings the copied text up to date.
   local file="$1" src="$2"
+  mkdir -p "$(dirname "$file")"
   if [ -f "$file" ] && grep -qF "$BEGIN" "$file"; then
-    echo "  already present in $file — skipping"
+    backup "$file"
+    awk -v s="$BEGIN" -v e="$END" -v src="$src" '
+      index($0, s) { print; while ((getline l < src) > 0) print l; skip = 1; next }
+      index($0, e) { skip = 0 }
+      !skip        { print }
+    ' "$file" > "$file.claudebro.tmp"
+    mv "$file.claudebro.tmp" "$file"
+    echo "  updated block in $file"
     return 0
   fi
-  mkdir -p "$(dirname "$file")"
   backup "$file"
   { echo; echo "$BEGIN"; cat "$src"; echo "$END"; } >> "$file"
   echo "  added to $file"

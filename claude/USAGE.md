@@ -11,9 +11,17 @@ If you are Claude Code and this layout is active, **you are running in the
 top pane**. The bottom pane is a separate plain shell — it is not another
 copy of you, and nothing runs there unless you (or the user) put it there.
 
-Treat the bottom pane as a scratch terminal you are expected to drive:
-run commands there, read back what they produced, keep the top pane (this
-conversation) free of that output.
+**Run your own commands with your own shell tool, as usual** — not in the
+bottom pane. Typing commands into a pane and reading the screen back is
+slower, loses exit codes, and truncates output.
+
+Use the bottom pane only when:
+
+- the user asks you to run something there, or to read what's in it;
+- the user should be able to watch it — a dev server, a log tail, a
+  long-running build or test watcher;
+- it's interactive or needs a real TTY (a REPL, a prompt, `sudo`), which
+  your shell tool can't provide.
 
 ## Finding the bottom pane
 
