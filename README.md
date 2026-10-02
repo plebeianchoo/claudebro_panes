@@ -40,6 +40,7 @@ Keep the clone where it is — the rc files source out of it by absolute path.
 
     ta          # attach to session "main", creating the layout if absent
     ta foo      # same, for a session named "foo"
+    tn foo      # alias for ta
 
 An existing session is attached to untouched, so `ta` is also the reattach
 command. Quitting Claude leaves a shell in the top pane rather than closing
@@ -72,7 +73,7 @@ single-pane windows.
 
 ## Layout
 
-    shell/ta.sh              the ta() function
+    shell/ta.sh              the ta() function and the tn alias
     tmux/claudebro.conf      pane border status + labels
     claude/USAGE.md          tells Claude Code it's in the top pane, how to drive the bottom
     install.sh / uninstall.sh

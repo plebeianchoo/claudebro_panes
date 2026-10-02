@@ -44,3 +44,7 @@ ta() {
 
   tmux attach -t "$s"
 }
+
+# tn [name] — same as ta. Shadows the common `tn` = `tmux new -s` alias so a
+# new named session gets the layout too.
+alias tn=ta

@@ -17,4 +17,4 @@ for f in "$HOME/.tmux.conf" "$HOME/.bashrc" "$HOME/.bash_aliases" "$HOME/.zshrc"
   mv "$f.claudebro.tmp" "$f"
   echo "removed block from $f (backup kept)"
 done
-echo "Done. Restart your shell; run 'unset -f ta' to drop it from the current one."
+echo "Done. Restart your shell; run 'unset -f ta; unalias tn' to drop them from the current one."

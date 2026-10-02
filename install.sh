@@ -58,10 +58,12 @@ esac
 for f in "$HOME/.bashrc" "$HOME/.bash_aliases" "$HOME/.zshrc" "$HOME/.profile"; do
   [ -f "$f" ] || continue
   grep -qF "$BEGIN" "$f" && continue
-  if grep -qE '^[[:space:]]*(ta\(\)|alias[[:space:]]+ta=)' "$f"; then
-    echo "  WARNING: $f already defines 'ta' — the sourced function will win;"
-    echo "           remove the old definition to avoid confusion."
-  fi
+  for name in ta tn; do
+    if grep -qE "^[[:space:]]*($name\(\)|alias[[:space:]]+$name=)" "$f"; then
+      echo "  WARNING: $f already defines '$name' — the sourced one will win;"
+      echo "           remove the old definition to avoid confusion."
+    fi
+  done
 done
 add_block "$RC" ". $REPO/shell/ta.sh"
 
