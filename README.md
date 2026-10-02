@@ -107,6 +107,7 @@ single-pane windows.
     shell/claudebro-session  ta for popups/buttons: create-or-switch a given client
     shell/pick-session.sh    the fzf session picker
     tmux/claudebro.conf      border labels, popups, status-bar buttons, alerts
+                             (uses the Catppuccin palette if that theme loads first)
     claude/USAGE.md          tells Claude Code it's in the top pane, how to drive the bottom
     claude/bell.sh           Stop/Notification hook: bell in Claude's pane
     claude/hooks.sh          add/remove that hook in ~/.claude/settings.json
