@@ -15,8 +15,8 @@ pane, and the bottom pane is a plain shell that Claude can drive with
 
 ## Install
 
-Requires tmux 3.1+ (for `split-window -l <n>%`; older versions fall back to
-the deprecated `-p`) and `bash` or `zsh`.
+Requires tmux 3.2+ (popups), `bash` or `zsh`, and `jq` for the Claude Code
+hooks. The popups and picker use `lazygit`, `btop` and `fzf` if installed.
 
 ```sh
 git clone git@github.com:plebeianchoo/claudebro_panes.git ~/claudebro/claudebro_panes
@@ -31,8 +31,10 @@ ta
 repo. It also asks whether to add `claude/USAGE.md` to `~/.claude/CLAUDE.md`,
 so Claude Code knows it runs in the top pane and when (and how) to use the
 bottom one. That block is a copy, not a link: after a `git pull`, re-run
-`./install.sh` and answer `y` to refresh it. It backs up anything it edits, is safe to re-run, and warns if `ta` is
-already defined elsewhere. `./uninstall.sh` removes everything it added.
+`./install.sh` and answer `y` to refresh it. It then asks whether to add the
+bell hooks (below) to `~/.claude/settings.json`, merging with any hooks
+already there. It backs up anything it edits, is safe to re-run, and warns
+if `ta` or `tn` is already defined elsewhere. `./uninstall.sh` removes everything it added.
 
 Keep the clone where it is — the rc files source out of it by absolute path.
 
@@ -50,6 +52,34 @@ it.
 |---|---|---|
 | `CLAUDEBRO_CMD` | `claude` | command run in the top pane |
 | `CLAUDEBRO_SPLIT` | `30` | bottom pane height, percent |
+
+Inside tmux, `ta` switches the current client instead of nesting a new one.
+
+### Keys and clicks
+
+| | |
+|---|---|
+| `Ctrl-b j` | fuzzy session picker (fzf): Enter switches; a new name + Enter creates it with the layout |
+| `Ctrl-b g` | lazygit popup, in the current pane's directory |
+| `Ctrl-b b` | btop popup |
+| `Ctrl-b S` | throwaway shell popup |
+| click session name (bottom left) | tmux's session list |
+| click `+` (bottom right) | prompt for a name, create a new `ta` session |
+| click `git` (bottom right) | lazygit popup |
+| click an orange `name !` chip | picker, with that session at the top |
+
+Sessions created from a popup or button don't see `CLAUDEBRO_CMD` /
+`CLAUDEBRO_SPLIT` from your shell rc, only tmux's own environment.
+
+### "Claude needs you" alerts
+
+With the hooks installed, Claude Code runs `claude/bell.sh` when it finishes
+a turn (`Stop`) or waits on a permission prompt (`Notification`). That rings
+the bell in Claude's pane; tmux flags the window, and every session with a
+flagged window shows as an orange `name !` chip at the bottom right until
+you visit it. No audible beep, and nothing for the window you're looking at.
+A session another client is looking at counts as seen, so it won't flag.
+Remove the hooks with `claude/hooks.sh uninstall` (or `./uninstall.sh`).
 
 ## How it works, and why
 
@@ -74,6 +104,10 @@ single-pane windows.
 ## Layout
 
     shell/ta.sh              the ta() function and the tn alias
-    tmux/claudebro.conf      pane border status + labels, click session name to switch
+    shell/claudebro-session  ta for popups/buttons: create-or-switch a given client
+    shell/pick-session.sh    the fzf session picker
+    tmux/claudebro.conf      border labels, popups, status-bar buttons, alerts
     claude/USAGE.md          tells Claude Code it's in the top pane, how to drive the bottom
+    claude/bell.sh           Stop/Notification hook: bell in Claude's pane
+    claude/hooks.sh          add/remove that hook in ~/.claude/settings.json
     install.sh / uninstall.sh

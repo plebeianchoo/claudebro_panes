@@ -4,6 +4,7 @@
 #               does not exist. A new session is two stacked panes: the top
 #               (~70%) runs Claude Code, the bottom is a plain shell for
 #               commands. An existing session is attached to untouched.
+#               Run inside tmux, it switches the current client instead.
 #
 # Environment:
 #   CLAUDEBRO_CMD    command run in the top pane   (default: claude)
@@ -13,9 +14,11 @@ ta() {
   local s="${1:-main}"
   local cmd="${CLAUDEBRO_CMD:-claude}"
   local split="${CLAUDEBRO_SPLIT:-30}"
-  local top bottom
+  local top bottom created=
 
-  if ! tmux has-session -t "$s" 2>/dev/null; then
+  # "=" makes the match exact; a bare name would also prefix-match, so
+  # `ta ma` would silently attach to an existing "main".
+  if ! tmux has-session -t "=$s" 2>/dev/null; then
     # Address panes by id (%N) rather than by index: index addressing like
     # "$s:1.1" silently targets the wrong pane on a machine that does not set
     # base-index / pane-base-index to 1.
@@ -32,17 +35,36 @@ ta() {
     tmux set -p -t "$top"    @role claude
     tmux set -p -t "$bottom" @role commands
     tmux select-pane -t "$top"
-
-    # Start Claude only once a client has attached. Started in a still
-    # detached session, the terminal's reply to Claude's background-colour
-    # query (OSC 11) arrives too late to be consumed and is drawn as literal
-    # ^[]11;rgb:... text. The hook unsets itself, so reattaching later does
-    # not launch a second Claude.
-    tmux set-hook -t "$s" client-attached \
-      "send-keys -t $top '$cmd' Enter ; set-hook -ut $s client-attached"
+    created=1
   fi
 
-  tmux attach -t "$s"
+  # Inside tmux — or driven from a popup or status-bar button, which passes
+  # the client to move in CLAUDEBRO_CLIENT — `attach` would nest a client,
+  # so switch the existing one instead.
+  if [ -n "${CLAUDEBRO_CLIENT:-}" ] || [ -n "${TMUX:-}" ]; then
+    if [ -n "${CLAUDEBRO_CLIENT:-}" ]; then
+      tmux switch-client -c "$CLAUDEBRO_CLIENT" -t "=$s" || return 1
+    else
+      tmux switch-client -t "=$s" || return 1
+    fi
+    # A client is already showing the session, so Claude can start now.
+    if [ -n "$created" ]; then
+      tmux send-keys -t "$top" "$cmd" Enter
+    fi
+    return 0
+  fi
+
+  # Start Claude only once a client has attached. Started in a still
+  # detached session, the terminal's reply to Claude's background-colour
+  # query (OSC 11) arrives too late to be consumed and is drawn as literal
+  # ^[]11;rgb:... text. The hook unsets itself, so reattaching later does
+  # not launch a second Claude.
+  if [ -n "$created" ]; then
+    tmux set-hook -t "=$s" client-attached \
+      "send-keys -t $top '$cmd' Enter ; set-hook -ut '=$s' client-attached"
+  fi
+
+  tmux attach -t "=$s"
 }
 
 # tn [name] — same as ta. Shadows the common `tn` = `tmux new -s` alias so a

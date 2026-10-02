@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+# claudebro-session NAME [CLIENT] — ta for callers that are not an
+# interactive shell (tmux popups, status-bar buttons): switches CLIENT to
+# session NAME, creating it with the two-pane layout first if needed.
+set -u
+
+[ -n "${1:-}" ] || { echo "usage: claudebro-session NAME [CLIENT]" >&2; exit 2; }
+. "$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/ta.sh"
+CLAUDEBRO_CLIENT="${2:-}" ta "$1"

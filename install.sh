@@ -81,6 +81,20 @@ case "$ans" in
   *)     echo "  skipped — see $REPO/claude/USAGE.md to add manually" ;;
 esac
 
+echo
+echo "claude/bell.sh rings the bell in Claude's pane when it finishes or needs"
+echo "you, so tmux can flag that session in the status bar (Claude Code hooks)."
+if [ -t 0 ]; then
+  read -r -p "Add the hooks to ~/.claude/settings.json now? [y/N] " ans
+else
+  ans=n
+  echo "  (non-interactive — skipping; run claude/hooks.sh install later)"
+fi
+case "$ans" in
+  [Yy]*) "$REPO/claude/hooks.sh" install ;;
+  *)     echo "  skipped — run $REPO/claude/hooks.sh install to add them" ;;
+esac
+
 cat <<EOF
 
 Done. To use it now:
