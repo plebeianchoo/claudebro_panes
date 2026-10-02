@@ -74,6 +74,6 @@ single-pane windows.
 ## Layout
 
     shell/ta.sh              the ta() function and the tn alias
-    tmux/claudebro.conf      pane border status + labels
+    tmux/claudebro.conf      pane border status + labels, click session name to switch
     claude/USAGE.md          tells Claude Code it's in the top pane, how to drive the bottom
     install.sh / uninstall.sh
