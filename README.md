@@ -61,7 +61,7 @@ Inside tmux, `ta` switches the current client instead of nesting a new one.
 |---|---|
 | `Ctrl-b j` | fuzzy session picker (fzf): Enter switches; a new name + Enter creates it with the layout |
 | `Ctrl-b g` | lazygit popup, in the current pane's directory |
-| `Ctrl-b b` | btop popup |
+| `Ctrl-b b` | btop popup, in Nord |
 | `Ctrl-b S` | throwaway shell popup |
 | click session name (bottom left) | tmux's session list |
 | click `+` (bottom right) | prompt for a name, create a new `ta` session |
@@ -70,6 +70,18 @@ Inside tmux, `ta` switches the current client instead of nesting a new one.
 
 Sessions created from a popup or button don't see `CLAUDEBRO_CMD` /
 `CLAUDEBRO_SPLIT` from your shell rc, only tmux's own environment.
+
+### Theme
+
+tmux is themed [Nord](https://www.nordtheme.com) by `tmux/nord.conf`: status
+bar, pane borders, popups, menus and selection. It uses Nord's hex colours
+directly, so it looks right whatever palette your terminal has (true colour
+needed). To keep tmux's own colours instead, add `set -g @claudebro_theme
+none` to `~/.tmux.conf` before the claudebro_panes block, and restart tmux.
+
+The btop popup runs Nord too, from its own config file
+(`~/.config/btop/claudebro-popup.conf`, copied from your `btop.conf` on first
+use), so running `btop` directly keeps your usual theme.
 
 ### "Claude needs you" alerts
 
@@ -107,7 +119,9 @@ single-pane windows.
     shell/claudebro-session  ta for popups/buttons: create-or-switch a given client
     shell/pick-session.sh    the fzf session picker
     tmux/claudebro.conf      border labels, popups, status-bar buttons, alerts
-                             (uses the Catppuccin palette if that theme loads first)
+    tmux/nord.conf           the Nord theme, loaded at the end of claudebro.conf
+    shell/btop-popup.sh      btop for the popup, with its own config and the Nord theme
+    btop/themes/nord.theme   btop's Nord theme (from aristocratos/btop v1.4.7, Apache-2.0)
     claude/USAGE.md          tells Claude Code it's in the top pane, how to drive the bottom
     claude/bell.sh           Stop/Notification hook: bell in Claude's pane
     claude/hooks.sh          add/remove that hook in ~/.claude/settings.json
