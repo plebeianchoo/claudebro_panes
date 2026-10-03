@@ -67,6 +67,19 @@ for f in "$HOME/.bashrc" "$HOME/.bash_aliases" "$HOME/.zshrc" "$HOME/.profile"; 
 done
 add_block "$RC" ". $REPO/shell/ta.sh"
 
+echo "tldr pages (Ctrl-b h):"
+pages="$HOME/.local/share/tealdeer/pages"
+mkdir -p "$pages"
+for page in "$REPO"/tldr/pages/*.md; do
+  link="$pages/$(basename "$page")"
+  if [ -e "$link" ] && [ ! -L "$link" ]; then
+    echo "  WARNING: $link is your own page — leaving it alone"
+    continue
+  fi
+  ln -sfn "$page" "$link"
+  echo "  linked $(basename "$page")"
+done
+
 echo
 echo "claude/USAGE.md tells Claude Code it runs in the top pane and how to"
 echo "drive the bottom one (find it by @role, send-keys / capture-pane)."

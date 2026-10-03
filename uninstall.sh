@@ -17,5 +17,12 @@ for f in "$HOME/.tmux.conf" "$HOME/.bashrc" "$HOME/.bash_aliases" "$HOME/.zshrc"
   mv "$f.claudebro.tmp" "$f"
   echo "removed block from $f (backup kept)"
 done
-"$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/claude/hooks.sh" uninstall
+REPO="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+for link in "$HOME"/.local/share/tealdeer/pages/*.md; do
+  [ -L "$link" ] || continue
+  case "$(readlink "$link")" in
+    "$REPO"/tldr/pages/*) rm "$link"; echo "removed tldr page link $link" ;;
+  esac
+done
+"$REPO/claude/hooks.sh" uninstall
 echo "Done. Restart your shell; run 'unset -f ta; unalias tn' to drop them from the current one."

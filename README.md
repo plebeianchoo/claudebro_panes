@@ -64,7 +64,7 @@ Inside tmux, `ta` switches the current client instead of nesting a new one.
 | `Ctrl-b b` | btop popup, in Nord |
 | `Ctrl-b S` | throwaway shell popup |
 | `Ctrl-b v` | markdown reader: fzf list of the `.md` files under the current directory with a rendered preview; click to highlight, double-click/Enter to read in glow (wheel/swipe scrolls, Shift-drag selects, q back to the list) |
-| `Ctrl-b h` | tldr cheat sheets: fuzzy-search every page with a live preview; Enter for the full page |
+| `Ctrl-b h` | tldr cheat sheets: fuzzy-search every page with a live preview; Enter for the full page. The `tmux` page also shows this setup's own keys and the most useful built-in ones, from `tldr/pages/tmux.patch.md` (`install.sh` links every page in `tldr/pages/` into tealdeer's custom pages; a `<name>.page.md` there would add a whole new page) |
 | click session name (bottom left) | tmux's session list |
 | click `+` (bottom right) | prompt for a name, create a new `ta` session |
 | click `git` (bottom right) | lazygit popup |
