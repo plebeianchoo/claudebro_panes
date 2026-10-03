@@ -1,0 +1,31 @@
+# lazygit theme in the Nord palette (https://www.nordtheme.com), for the
+# Ctrl-b g / [git] popup. Layered over your own lazygit config by
+# shell/lazygit-popup.sh, so a plain `lazygit` keeps its usual look.
+gui:
+  theme:
+    activeBorderColor:
+      - "#88C0D0"   # nord8, frost cyan
+      - bold
+    inactiveBorderColor:
+      - "#4C566A"   # nord3
+    searchingActiveBorderColor:
+      - "#EBCB8B"   # nord13, aurora yellow
+      - bold
+    optionsTextColor:
+      - "#81A1C1"   # nord9, frost blue
+    selectedLineBgColor:
+      - "#434C5E"   # nord2
+    inactiveViewSelectedLineBgColor:
+      - "#3B4252"   # nord1
+    cherryPickedCommitFgColor:
+      - "#2E3440"   # nord0
+    cherryPickedCommitBgColor:
+      - "#88C0D0"   # nord8
+    markedBaseCommitFgColor:
+      - "#2E3440"   # nord0
+    markedBaseCommitBgColor:
+      - "#EBCB8B"   # nord13
+    unstagedChangesColor:
+      - "#BF616A"   # nord11, aurora red
+    defaultFgColor:
+      - "#D8DEE9"   # nord4

@@ -60,7 +60,7 @@ Inside tmux, `ta` switches the current client instead of nesting a new one.
 | | |
 |---|---|
 | `Ctrl-b j` | fuzzy session picker (fzf): Enter switches; a new name + Enter creates it with the layout |
-| `Ctrl-b g` | lazygit popup, in the current pane's directory |
+| `Ctrl-b g` | lazygit popup, in Nord, in the current pane's directory |
 | `Ctrl-b b` | btop popup, in Nord |
 | `Ctrl-b S` | throwaway shell popup |
 | click session name (bottom left) | tmux's session list |
@@ -86,7 +86,9 @@ connect from. If they show as boxes or `?`, add `set -g
 
 The btop popup runs Nord too, from its own config file
 (`~/.config/btop/claudebro-popup.conf`, copied from your `btop.conf` on first
-use), so running `btop` directly keeps your usual theme.
+use), so running `btop` directly keeps your usual theme. Likewise the lazygit
+popup loads your lazygit config with `lazygit/nord.yml` layered on top; a
+plain `lazygit` is unchanged.
 
 ### "Claude needs you" alerts
 
@@ -127,6 +129,8 @@ single-pane windows.
     tmux/nord.conf           the Nord theme, loaded at the end of claudebro.conf
     shell/btop-popup.sh      btop for the popup, with its own config and the Nord theme
     btop/themes/nord.theme   btop's Nord theme (from aristocratos/btop v1.4.7, Apache-2.0)
+    shell/lazygit-popup.sh   lazygit for the popup: your config + lazygit/nord.yml
+    lazygit/nord.yml         lazygit colours in the Nord palette
     claude/USAGE.md          tells Claude Code it's in the top pane, how to drive the bottom
     claude/bell.sh           Stop/Notification hook: bell in Claude's pane
     claude/hooks.sh          add/remove that hook in ~/.claude/settings.json
