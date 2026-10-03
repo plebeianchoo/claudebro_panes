@@ -1,0 +1,30 @@
+#!/usr/bin/env bash
+# claudebro-window [NAME] [SESSION] [DIR] — opens a new window in SESSION with
+# the layout ta gives a new session: Claude Code on top, a plain shell below,
+# both starting in DIR. A blank NAME keeps tmux's default window name. Used by
+# the status bar's + button.
+#
+# Environment: CLAUDEBRO_CMD and CLAUDEBRO_SPLIT, as for ta.
+set -u
+
+name="${1:-}"
+session="${2:-}"
+dir="${3:-$PWD}"
+cmd="${CLAUDEBRO_CMD:-claude}"
+split="${CLAUDEBRO_SPLIT:-30}"
+
+# A trailing ":" targets the session itself, so the window takes its next free index.
+args=(-c "$dir" -P -F '#{pane_id}')
+[ -n "$session" ] && args+=(-t "$session:")
+[ -n "$name" ] && args+=(-n "$name")
+top=$(tmux new-window "${args[@]}") || exit 1
+
+# -l <n>% needs tmux 3.1; fall back to the deprecated -p for older tmux.
+bottom=$(tmux split-window -v -l "${split}%" -t "$top" -c "$dir" -P -F '#{pane_id}' 2>/dev/null) \
+  || bottom=$(tmux split-window -v -p "$split" -t "$top" -c "$dir" -P -F '#{pane_id}') || exit 1
+
+tmux set -p -t "$top"    @role claude
+tmux set -p -t "$bottom" @role commands
+tmux select-pane -t "$top"
+# The window opens in front of a client already attached, so Claude can start now.
+tmux send-keys -t "$top" "$cmd" Enter

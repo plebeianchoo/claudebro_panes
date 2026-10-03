@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # claudebro-session NAME [CLIENT] — ta for callers that are not an
-# interactive shell (tmux popups, status-bar buttons): switches CLIENT to
+# interactive shell (tmux popups, such as the Ctrl-b j picker): switches CLIENT to
 # session NAME, creating it with the two-pane layout first if needed.
 set -u
 
