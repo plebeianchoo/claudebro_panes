@@ -60,7 +60,7 @@ Inside tmux, `ta` switches the current client instead of nesting a new one.
 | | |
 |---|---|
 | `Ctrl-b j` | fuzzy session picker (fzf): Enter switches; a new name + Enter creates it with the layout |
-| `Ctrl-b g` | lazygit popup, in Nord, in the current pane's directory |
+| `Ctrl-b g` | lazygit popup, in Nord, in the current pane's directory; outside a git repo, pick one of lazygit's recent repos instead (Esc closes) |
 | `Ctrl-b b` | btop popup, in Nord |
 | `Ctrl-b S` | throwaway shell popup |
 | `Ctrl-b v` | markdown reader: fzf list of the `.md` files under the current directory with a rendered preview; click to highlight, double-click/Enter to read in glow (wheel/swipe scrolls, Shift-drag selects, q back to the list) |
