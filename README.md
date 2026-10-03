@@ -63,6 +63,8 @@ Inside tmux, `ta` switches the current client instead of nesting a new one.
 | `Ctrl-b g` | lazygit popup, in Nord, in the current pane's directory |
 | `Ctrl-b b` | btop popup, in Nord |
 | `Ctrl-b S` | throwaway shell popup |
+| `Ctrl-b v` | markdown reader (glow, Nord): browse and read the `.md` files under the current directory |
+| `Ctrl-b h` | tldr cheat sheets: fuzzy-search every page with a live preview; Enter for the full page |
 | click session name (bottom left) | tmux's session list |
 | click `+` (bottom right) | prompt for a name, create a new `ta` session |
 | click `git` (bottom right) | lazygit popup |
@@ -88,7 +90,9 @@ The btop popup runs Nord too, from its own config file
 (`~/.config/btop/claudebro-popup.conf`, copied from your `btop.conf` on first
 use), so running `btop` directly keeps your usual theme. Likewise the lazygit
 popup loads your lazygit config with `lazygit/nord.yml` layered on top; a
-plain `lazygit` is unchanged.
+plain `lazygit` is unchanged. glow (`glow/nord.json`, a recolour of glamour's
+dark style, MIT), tldr (`tldr/nord.toml`) and the fzf pickers get Nord the
+same way, only inside the popups.
 
 ### "Claude needs you" alerts
 
@@ -131,6 +135,11 @@ single-pane windows.
     btop/themes/nord.theme   btop's Nord theme (from aristocratos/btop v1.4.7, Apache-2.0)
     shell/lazygit-popup.sh   lazygit for the popup: your config + lazygit/nord.yml
     lazygit/nord.yml         lazygit colours in the Nord palette
+    shell/glow-popup.sh      glow for the Ctrl-b v popup
+    glow/nord.json           glow (glamour) style in the Nord palette
+    shell/tldr-popup.sh      fzf over tldr pages for the Ctrl-b h popup
+    tldr/nord.toml           tealdeer colours in the Nord palette
+    shell/popup-common.sh    shared by the launchers: true-colour check, Nord fzf colours
     claude/USAGE.md          tells Claude Code it's in the top pane, how to drive the bottom
     claude/bell.sh           Stop/Notification hook: bell in Claude's pane
     claude/hooks.sh          add/remove that hook in ~/.claude/settings.json

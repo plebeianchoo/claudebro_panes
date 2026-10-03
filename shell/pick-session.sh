@@ -5,6 +5,8 @@
 # matches nothing and pressing Enter creates it with the ta layout.
 set -u
 here="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+. "$here/popup-common.sh"
+claudebro_truecolor
 client="${1:-}"
 
 if ! command -v fzf >/dev/null; then
@@ -18,7 +20,7 @@ fi
 out=$(tmux list-sessions -F \
   '#{?session_alerts,1,0}	#{session_activity}	#{?session_alerts,!, }	#{session_name}	#{session_windows}w#{?session_attached, · attached,}' |
   sort -t $'\t' -k1,1nr -k2,2nr |
-  fzf --delimiter=$'\t' --with-nth=3.. --reverse --print-query \
+  fzf "$CLAUDEBRO_FZF_NORD" --delimiter=$'\t' --with-nth=3.. --reverse --print-query \
       --prompt='session> ' --header='Enter: switch · new name + Enter: create')
 status=$?
 
