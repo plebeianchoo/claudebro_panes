@@ -63,7 +63,7 @@ Inside tmux, `ta` switches the current client instead of nesting a new one.
 | `Ctrl-b g` | lazygit popup, in Nord, in the current pane's directory |
 | `Ctrl-b b` | btop popup, in Nord |
 | `Ctrl-b S` | throwaway shell popup |
-| `Ctrl-b v` | markdown reader (glow, Nord): browse and read the `.md` files under the current directory |
+| `Ctrl-b v` | markdown reader (glow, Nord): browse and read the `.md` files under the current directory; mouse wheel / swipe scrolls, Shift-drag selects text |
 | `Ctrl-b h` | tldr cheat sheets: fuzzy-search every page with a live preview; Enter for the full page |
 | click session name (bottom left) | tmux's session list |
 | click `+` (bottom right) | prompt for a name, create a new `ta` session |
