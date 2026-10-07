@@ -65,6 +65,9 @@ Inside tmux, `ta` switches the current client instead of nesting a new one.
 | `Ctrl-b S` | throwaway shell popup |
 | `Ctrl-b v` | markdown reader: fzf list of the `.md` files under the current directory with a rendered preview; click to highlight, double-click/Enter to read in glow (wheel/swipe scrolls, Shift-drag selects, q back to the list) |
 | `Ctrl-b h` | tldr cheat sheets: fuzzy-search every page with a live preview; Enter for the full page. The `tmux` page also shows this setup's own keys and the most useful built-in ones, from `tldr/pages/tmux.patch.md` (`install.sh` links every page in `tldr/pages/` into tealdeer's custom pages; a `<name>.page.md` there would add a whole new page) |
+| `Ctrl-b T` | team popup: one block per Claude pane in every session (window, state, idle time, title topic, last 4 lines) plus the `## Assigned` section of `~/workbench/.team/BOARD.md`; read-only, refreshes every 2s, `q` closes. `shell/team-glance.sh --once` prints it once |
+| `Ctrl-b C` | `team` window: a read-only live mirror pane per Claude pane (stacked, no shell panes), or switch to it if it exists; Enter in a mirror jumps to the real pane. Close it with `Ctrl-b &` |
+| `●` / `○` after a window name | that window's Claude is working (`●`) or idle (`○`, its pane title starts with `✳`); no glyph for windows without Claude. The status bar refreshes every 3s |
 | click session name (bottom left) | tmux's session list |
 | click `+` (bottom right) | prompt for a name (blank for the default), open a new window in this session with the Claude + shell layout, in the current pane's directory |
 | click `git` (bottom right) | lazygit popup |
@@ -138,6 +141,9 @@ single-pane windows.
     lazygit/nord.yml         lazygit colours in the Nord palette
     shell/glow-popup.sh      fzf markdown picker + glow reader for the Ctrl-b v popup
     glow/nord.json           glow (glamour) style in the Nord palette
+    shell/team-glance.sh     the Ctrl-b T popup: every Claude pane at a glance, plus the team board
+    shell/team-window.sh     the Ctrl-b C team window: creates or switches to it
+    shell/team-mirror.sh     what runs in each team-window pane: a read-only mirror of one Claude pane
     shell/tldr-popup.sh      fzf over tldr pages for the Ctrl-b h popup
     tldr/nord.toml           tealdeer colours in the Nord palette
     shell/popup-common.sh    shared by the launchers: true-colour check, Nord fzf colours

@@ -6,6 +6,10 @@
 
 `<Ctrl b><g>, <b>, <S>, <v>, <h>`
 
+- claudebro: team popup (every Claude pane: state, idle time, last lines, board) / `team` mirror window (Enter jumps to the real pane):
+
+`<Ctrl b><T> / <Ctrl b><C>`
+
 - Rename the current session / window:
 
 `<Ctrl b><$> / <Ctrl b><,>`
