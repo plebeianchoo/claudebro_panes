@@ -131,7 +131,7 @@ single-pane windows.
 
     shell/ta.sh              the ta() function and the tn alias
     shell/claudebro-session  ta for popups (the Ctrl-b j picker): create-or-switch a given client
-    shell/claudebro-window   the + button: a new window with the Claude + shell layout
+    shell/claudebro-window   the + button: a new window with the Claude + shell layout (Claude not started)
     shell/pick-session.sh    the fzf session picker
     tmux/claudebro.conf      border labels, popups, status-bar buttons, alerts
     tmux/nord.conf           the Nord theme, loaded at the end of claudebro.conf
