@@ -8,11 +8,14 @@
 # Claude, so 25 is the default.
 #
 # Only a window that is exactly ta()'s two stacked panes (@role claude above
-# @role commands) is touched. On a wider client a window this pinned gets
+# @role commands) is touched. On a wider or taller client a pinned window gets
 # ta()'s 30% shell back; one it never pinned is left alone.
 #
 # Options (set -g in ~/.tmux.conf): @cb_pin_rows (default 25),
-# @cb_pin_max_width (default 170 columns; wider clients aren't pinned).
+# @cb_pin_max_width (default 170 columns) and @cb_pin_max_height (default 55
+# window rows); a client wider or taller than those isn't pinned. The height
+# cap matters: a pin sized for a 50-row tablet would starve Claude on a
+# 77-row screen.
 set -u
 w="${1:-}"
 [ -n "$w" ] || exit 0
@@ -20,6 +23,7 @@ w="${1:-}"
 opt() { local v; v=$(tmux show -gv "$1" 2>/dev/null); echo "${v:-$2}"; }
 pin=$(opt @cb_pin_rows 25)
 maxw=$(opt @cb_pin_max_width 170)
+maxh=$(opt @cb_pin_max_height 55)
 
 read -r ww wh n < <(tmux display -p -t "$w" '#{window_width} #{window_height} #{window_panes}') || exit 0
 [ "$n" = 2 ] || exit 0
@@ -33,7 +37,7 @@ while read -r id role top; do
 done < <(tmux list-panes -t "$w" -F '#{pane_id} #{@role} #{pane_top}')
 [ -n "$claude" ] && [ -n "$shell" ] && [ "$ctop" -lt "$stop" ] || exit 0
 
-if [ "$ww" -le "$maxw" ]; then
+if [ "$ww" -le "$maxw" ] && [ "$wh" -le "$maxh" ]; then
   # Two border rows and at least one shell row.
   h=$(( wh - 3 < pin ? wh - 3 : pin ))
   [ "$h" -ge 1 ] || exit 0

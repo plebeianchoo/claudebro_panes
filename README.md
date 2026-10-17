@@ -79,14 +79,15 @@ Sessions created from a popup or button don't see `CLAUDEBRO_CMD` /
 
 ### Tablet keyboard
 
-On a client up to 170 columns wide (a tablet, either way round), a
+On a client up to 170 columns wide and 55 rows tall (a tablet, either way round), a
 `window-resized` hook (`shell/pin-layout.sh`) keeps Claude's pane at 25 rows
 and lets the shell take every resize. An on-screen keyboard then shrinks only
 the shell (to 1 row) and Claude's prompt and transcript stay put. Portrait
 with the keyboard up is 29 rows: 1 status + 2 borders + 1 shell + 25 Claude.
-Only windows that are exactly the two `ta` panes are touched. On a wider
-client, a pinned window gets its 30% shell back. Tune with
-`set -g @cb_pin_rows N` and `set -g @cb_pin_max_width N` in `~/.tmux.conf`.
+Only windows that are exactly the two `ta` panes are touched. On a wider or
+taller client, a pinned window gets its 30% shell back. Tune with
+`set -g @cb_pin_rows N`, `@cb_pin_max_width N` and `@cb_pin_max_height N` in
+`~/.tmux.conf`.
 
 ### Theme
 
