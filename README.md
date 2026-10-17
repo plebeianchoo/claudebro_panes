@@ -79,20 +79,30 @@ Sessions created from a popup or button don't see `CLAUDEBRO_CMD` /
 
 ### Tablet keyboard
 
-A `window-resized` hook (`shell/pin-layout.sh`) stops an on-screen keyboard
-from pushing Claude's pane up. A keyboard shows up as the window getting
-shorter at the same width, so for each width it remembers the tallest and
-shortest window seen, then pins Claude's pane to what fits with the keyboard
-up (shortest - 2 borders - 1 shell row). The shell takes every resize from
-then on. The first keyboard at a new width (font size, rotation) still jumps
-once, which is when it learns.
+Hooks on client and window resizes (`shell/pin-layout.sh`) stop an on-screen
+keyboard from pushing Claude's pane up. A keyboard shows up as the client
+getting shorter at the same width, so for each width they remember the
+tallest and shortest client seen. Once a width has a real drop, its windows
+are pinned. Each pinned window keeps its keyboard-down size (manual, so tmux
+no longer resizes it), and Claude's pane gets what fits with the keyboard up
+(shortest - 2 borders - 1 shell row). When the keyboard comes up, tmux shows
+the top of the window: all of Claude's pane and one shell row. The rest of
+the shell sits under the keyboard. No pane is resized, so Claude doesn't move
+or even redraw. Focusing the shell scrolls the view down to its cursor.
+
+Resizing panes to compensate can't do this. When a pane ends up at the size
+it started at, tmux replays the in-between size first to force a redraw, so
+Claude flashes. That's why the window itself stays put.
 
 The pin is only used when Claude keeps at least half its keyboard-down room
 (`set -g @cb_pin_keep 50`, in percent). On the Pad Mini at 152x90 that pins
-portrait (Claude 52 of 86 rows, shell 35 / 1) and leaves landscape (229x59,
-where it would be 24 of 56) to tmux. Desktops never shrink like this and are
-never pinned. Only windows that are exactly the two `ta` panes are touched.
-What it learned lasts until the tmux server restarts.
+portrait (Claude 52 rows, shell 35 with 1 showing over the keyboard) and
+leaves landscape (229x59, where Claude would keep only 24 of 56 rows) to
+tmux. Desktops never shrink like this and are never pinned, and a client of
+another width gets a pinned window back with the 30% shell. Only windows that
+are exactly the two `ta` panes are touched. What it learns is saved to
+`~/.local/state/claudebro/keyboard.conf` and loaded with this config. So only
+the first keyboard at a new font size or orientation jumps, once.
 
 ### Theme
 
