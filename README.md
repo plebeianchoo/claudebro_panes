@@ -77,6 +77,17 @@ Inside tmux, `ta` switches the current client instead of nesting a new one.
 Sessions created from a popup or button don't see `CLAUDEBRO_CMD` /
 `CLAUDEBRO_SPLIT` from your shell rc, only tmux's own environment.
 
+### Tablet keyboard
+
+On a client up to 170 columns wide (a tablet, either way round), a
+`window-resized` hook (`shell/pin-layout.sh`) keeps Claude's pane at 25 rows
+and lets the shell take every resize. An on-screen keyboard then shrinks only
+the shell (to 1 row) and Claude's prompt and transcript stay put. Portrait
+with the keyboard up is 29 rows: 1 status + 2 borders + 1 shell + 25 Claude.
+Only windows that are exactly the two `ta` panes are touched. On a wider
+client, a pinned window gets its 30% shell back. Tune with
+`set -g @cb_pin_rows N` and `set -g @cb_pin_max_width N` in `~/.tmux.conf`.
+
 ### Theme
 
 tmux is themed [Nord](https://www.nordtheme.com) by `tmux/nord.conf`: status
@@ -146,6 +157,7 @@ single-pane windows.
     shell/team-window.sh     the Ctrl-b C team window: creates or switches to it
     shell/team-mirror.sh     what runs in each team-window pane: a read-only mirror of one Claude pane
     shell/tldr-popup.sh      fzf over tldr pages for the Ctrl-b h popup
+    shell/pin-layout.sh      window-resized hook: pins Claude's pane height on a tablet
     shell/prompts-popup.sh   the Ctrl-b P popup: types a canned prompt into Claude's pane
     prompts.txt              the default prompt list for it
     tldr/nord.toml           tealdeer colours in the Nord palette
