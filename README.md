@@ -79,15 +79,20 @@ Sessions created from a popup or button don't see `CLAUDEBRO_CMD` /
 
 ### Tablet keyboard
 
-On a client up to 170 columns wide and 55 rows tall (a tablet, either way round), a
-`window-resized` hook (`shell/pin-layout.sh`) keeps Claude's pane at 25 rows
-and lets the shell take every resize. An on-screen keyboard then shrinks only
-the shell (to 1 row) and Claude's prompt and transcript stay put. Portrait
-with the keyboard up is 29 rows: 1 status + 2 borders + 1 shell + 25 Claude.
-Only windows that are exactly the two `ta` panes are touched. On a wider or
-taller client, a pinned window gets its 30% shell back. Tune with
-`set -g @cb_pin_rows N`, `@cb_pin_max_width N` and `@cb_pin_max_height N` in
-`~/.tmux.conf`.
+A `window-resized` hook (`shell/pin-layout.sh`) stops an on-screen keyboard
+from pushing Claude's pane up. A keyboard shows up as the window getting
+shorter at the same width, so for each width it remembers the tallest and
+shortest window seen, then pins Claude's pane to what fits with the keyboard
+up (shortest - 2 borders - 1 shell row). The shell takes every resize from
+then on. The first keyboard at a new width (font size, rotation) still jumps
+once, which is when it learns.
+
+The pin is only used when Claude keeps at least half its keyboard-down room
+(`set -g @cb_pin_keep 50`, in percent). On the Pad Mini at 152x90 that pins
+portrait (Claude 52 of 86 rows, shell 35 / 1) and leaves landscape (229x59,
+where it would be 24 of 56) to tmux. Desktops never shrink like this and are
+never pinned. Only windows that are exactly the two `ta` panes are touched.
+What it learned lasts until the tmux server restarts.
 
 ### Theme
 
