@@ -1,0 +1,17 @@
+# Canned prompts for the Ctrl-b P popup (shell/prompts-popup.sh), one per line.
+# Your own list goes in ~/.config/claudebro/prompts.txt (Ctrl-E in the popup
+# starts it from this one). Blank lines and lines starting with # are skipped.
+yes
+go ahead
+no, stop and explain first
+run the tests and show me the output
+commit this
+show me what you changed
+explain the last error in plain words
+what's left to do?
+walk me through it in the bottom pane
+review the changes before committing
+summarise what you did in three lines
+/handoff
+/clear
+/code-review

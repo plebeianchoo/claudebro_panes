@@ -6,6 +6,10 @@
 
 `<Ctrl b><g>, <b>, <S>, <v>, <h>`
 
+- claudebro: canned prompts typed into Claude's pane (Enter types, Ctrl-S types and sends, Ctrl-E edits the list; also the `say` button):
+
+`<Ctrl b><P>`
+
 - claudebro: team popup (every Claude pane: state, idle time, last lines, board) / `team` mirror window (Enter jumps to the real pane):
 
 `<Ctrl b><T> / <Ctrl b><C>`
