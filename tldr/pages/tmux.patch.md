@@ -10,6 +10,10 @@
 
 `<Ctrl b><P>`
 
+- claudebro: approvals popup, every Claude waiting on a prompt (1-9 answers, Esc cancels, arrows pick, Enter jumps; also the orange `N waiting` chip):
+
+`<Ctrl b><A>`
+
 - claudebro: team popup (every Claude pane: state, idle time, last lines, board) / `team` mirror window (Enter jumps to the real pane):
 
 `<Ctrl b><T> / <Ctrl b><C>`

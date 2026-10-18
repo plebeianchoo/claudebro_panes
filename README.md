@@ -66,12 +66,14 @@ Inside tmux, `ta` switches the current client instead of nesting a new one.
 | `Ctrl-b v` | markdown reader: fzf list of the `.md` files under the current directory with a rendered preview; click to highlight, double-click/Enter to read in glow (wheel/swipe scrolls, Shift-drag selects, q back to the list) |
 | `Ctrl-b h` | tldr cheat sheets: fuzzy-search every page with a live preview; Enter for the full page. The `tmux` page also shows this setup's own keys and the most useful built-in ones, from `tldr/pages/tmux.patch.md` (`install.sh` links every page in `tldr/pages/` into tealdeer's custom pages; a `<name>.page.md` there would add a whole new page) |
 | `Ctrl-b P` | canned prompts, for the tablet's on-screen keyboard: fzf over `prompts.txt` (or your own `~/.config/claudebro/prompts.txt`); Enter types the line into this window's Claude pane to edit or add to, Ctrl-S types and sends it, text matching no line is typed as is, Ctrl-E edits the list (starting your own copy) |
+| `Ctrl-b A` | approvals popup: every Claude pane, in any session, sitting on a prompt you answer by choosing (permission, question, folder trust), with the selected one's prompt underneath. `1`-`9` answers it, Esc cancels it, ↑↓ (or `k`/`j`) picks another, Enter jumps to that pane, `q` closes. It re-reads the pane before sending and drops the key if the prompt has changed, and closes itself once you've answered the last one |
 | `Ctrl-b T` | team popup: one block per Claude pane in every session (window, state, idle time, title topic, last 4 lines) plus the `## Assigned` section of `~/workbench/.team/BOARD.md`; read-only, refreshes every 2s, `q` closes. `shell/team-glance.sh --once` prints it once |
 | `Ctrl-b C` | `team` window: a read-only live mirror pane per Claude pane (stacked, no shell panes), or switch to it if it exists; Enter in a mirror jumps to the real pane. Close it with `Ctrl-b &` |
 | `●` / `○` after a window name | that window's Claude is working (`●`) or idle (`○`, its pane title starts with `✳`); no glyph for windows without Claude. The status bar refreshes every 3s |
 | click session name (bottom left) | tmux's session list |
 | click `+` (bottom right) | prompt for a name (blank for the default), open a new window in this session with the Claude + shell layout, in the current pane's directory |
 | click `say` (bottom right) | the `Ctrl-b P` canned-prompts popup |
+| click the orange `N waiting` chip | the `Ctrl-b A` approvals popup. The chip shows while any Claude is on a prompt (counted every 3s by `shell/approvals.sh --status`) |
 | click an orange `name !` chip | picker, with that session at the top |
 
 Sessions created from a popup or button don't see `CLAUDEBRO_CMD` /
