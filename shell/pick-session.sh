@@ -1,7 +1,9 @@
 #!/usr/bin/env bash
 # pick-session.sh CLIENT — fuzzy session switcher, run inside a tmux popup.
-# Sessions waiting on you (a bell, e.g. Claude finished) sort first, marked
-# "!". Enter switches CLIENT to the highlighted session; typing a name that
+# Sessions with a Claude waiting on a prompt sort first, then sessions with
+# a bell (e.g. Claude finished), marked "!". Each shows its Claude state
+# like the bottom left: ◆ waits on you, ● working, ○ idle (tmux's @cb_sess).
+# Enter switches CLIENT to the highlighted session; typing a name that
 # matches nothing and pressing Enter creates it with the ta layout.
 set -u
 here="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
@@ -15,10 +17,11 @@ if ! command -v fzf >/dev/null; then
   exit 0
 fi
 
-# Fields: has-alert, last activity, flag, name, details. Sorted alerts
-# first, then most recently active; only flag/name/details are shown.
+# Fields: urgency (2 waiting, 1 bell, 0 neither), last activity, flag +
+# state, name, details. Sorted most urgent first, then most recently
+# active; only flag/name/details are shown.
 out=$(tmux list-sessions -F \
-  '#{?session_alerts,1,0}	#{session_activity}	#{?session_alerts,!, }	#{session_name}	#{session_windows}w#{?session_attached, · attached,}' |
+  '#{?#{m:*◆*,#{E:@cb_glyphs}},2,#{?session_alerts,1,0}}	#{session_activity}	#{?session_alerts,!, }#{?#{E:@cb_sess},#{E:@cb_sess},  }	#{session_name}	#{session_windows}w#{?session_attached, · attached,}' |
   sort -t $'\t' -k1,1nr -k2,2nr |
   fzf "$CLAUDEBRO_FZF_NORD" --delimiter=$'\t' --with-nth=3.. --reverse --print-query \
       --prompt='session> ' --header='Enter: switch · new name + Enter: create')

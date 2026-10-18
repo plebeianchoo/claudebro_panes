@@ -96,7 +96,9 @@ esac
 
 echo
 echo "claude/bell.sh rings the bell in Claude's pane when it finishes or needs"
-echo "you, so tmux can flag that session in the status bar (Claude Code hooks)."
+echo "you, so tmux can flag that window in the status bar, and claude/state.sh"
+echo "tracks whether each Claude is working, idle or waiting on you (the ● ○ ◆"
+echo "glyphs). Both are Claude Code hooks."
 if [ -t 0 ]; then
   read -r -p "Add the hooks to ~/.claude/settings.json now? [y/N] " ans
 else

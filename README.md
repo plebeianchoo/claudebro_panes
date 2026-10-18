@@ -69,7 +69,8 @@ Inside tmux, `ta` switches the current client instead of nesting a new one.
 | `Ctrl-b A` | approvals popup: every Claude pane, in any session, sitting on a prompt you answer by choosing (permission, question, folder trust), as a grid of cards showing each prompt's first lines and options. Arrows (or `hjkl`, Tab) pick a card, `1`-`9` answers it, Esc cancels it, Space toggles between the cards and the selected prompt in full, Enter jumps to that pane, `q` closes. It re-reads the pane before sending and drops the key if the prompt has changed, and closes itself once you've answered the last one |
 | `Ctrl-b T` | team popup: one block per Claude pane in every session (window, state, idle time, title topic, last 4 lines) plus the `## Assigned` section of `~/workbench/.team/BOARD.md`; read-only, refreshes every 2s, `q` closes. `shell/team-glance.sh --once` prints it once |
 | `Ctrl-b C` | `team` window: a read-only live mirror pane per Claude pane (stacked, no shell panes), or switch to it if it exists; Enter in a mirror jumps to the real pane. Close it with `Ctrl-b &` |
-| `●` / `○` after a window name | that window's Claude is working (`●`) or idle (`○`, its pane title starts with `✳`); no glyph for windows without Claude. The status bar refreshes every 3s |
+| `●` / `○` / `◆` after a window name | that window's Claude is working (`●`), idle (`○`) or waiting on you, at a permission prompt or a question (`◆`); no glyph for windows without Claude. Set by the `claude/state.sh` hooks (Claude Code's pane title starts with `✳` whether it's working or not, so it can't tell). The status bar refreshes every 3s |
+| `●` / `○` / `◆` after the session name | the session's most urgent Claude; the name turns yellow on `◆`. The session picker (Ctrl-b j) shows the same glyph per session and lists sessions with a `◆` first |
 | window names in the tabs | compact until there's an alert: the current window shows its name cut to 5 characters, a window whose Claude needs you (bell flagged) its full name, the others just number and `○`/`●` |
 | narrow screens (a phone) | when even those tabs wouldn't fit the client's width (measured from the tabs, plus `@cb_status_reserve`, default 32 columns, for the session name's arrows and the right side) the bar goes compact: no flags, and alerted windows' names are cut to 5 characters too. `‹` `›` buttons appear at the start of the right side: tap them to scroll the window tabs a window at a time (tmux can't scroll its list, so tabs scrolled off draw as nothing; `shell/status-scroll.sh`). Switching windows resets the scroll. A wider client attached at the same time keeps the full bar |
 | click session name (bottom left) | tmux's session list |
@@ -136,6 +137,13 @@ the bell in Claude's pane; tmux flags the window, and its tab turns orange
 with a `!` until you visit it. Other sessions' alerts show in the session
 picker (Ctrl-b j). No audible beep, and nothing for the window you're looking at.
 A session another client is looking at counts as seen, so it won't flag.
+The same install adds `claude/state.sh` on `UserPromptSubmit`, `PostToolUse`,
+`Notification`, `Stop`, `SessionStart` and `SessionEnd`: it keeps each
+Claude's state in its pane's `@cb_busy` option for the `○` / `●` / `◆`
+glyphs. Claudes started before the install pick the hooks up on restart.
+An interrupted turn (Esc) fires no hook, so it shows `●` until the next
+prompt. `hooks.sh` writes through a symlinked `settings.json` (e.g. into a
+dotfiles repo) without replacing the link.
 Remove the hooks with `claude/hooks.sh uninstall` (or `./uninstall.sh`).
 
 ## How it works, and why
@@ -183,5 +191,6 @@ single-pane windows.
     shell/popup-common.sh    shared by the launchers: true-colour check, Nord fzf colours
     claude/USAGE.md          tells Claude Code it's in the top pane, how to drive the bottom
     claude/bell.sh           Stop/Notification hook: bell in Claude's pane
-    claude/hooks.sh          add/remove that hook in ~/.claude/settings.json
+    claude/state.sh          the working/idle/waiting hook (pane option @cb_busy)
+    claude/hooks.sh          add/remove those hooks in ~/.claude/settings.json
     install.sh / uninstall.sh

@@ -1,45 +1,72 @@
 #!/usr/bin/env bash
-# hooks.sh install|uninstall — add or remove the Stop and Notification hooks
-# that run claude/bell.sh, in ~/.claude/settings.json. Merges with whatever
-# hooks are already there and leaves them alone. Needs jq. Idempotent.
+# hooks.sh install|uninstall — add or remove claudebro's Claude Code hooks in
+# ~/.claude/settings.json: claude/bell.sh on Stop and Notification (the
+# alert), and claude/state.sh on the events that say whether Claude is
+# working, idle or waiting on you (the ○ / ● / ◆ glyphs). Merges with
+# whatever hooks are already there and leaves them alone. Needs jq.
+# Idempotent: install adds only the hooks that are missing.
 set -euo pipefail
 
 REPO="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
-CMD="$REPO/claude/bell.sh"
+BELL="$REPO/claude/bell.sh"
+STATE="$REPO/claude/state.sh"
 F="$HOME/.claude/settings.json"
 
+# event|command|async — one line per hook.
+HOOKS="Stop|$BELL|true
+Notification|$BELL|true
+UserPromptSubmit|$STATE busy|false
+PostToolUse|$STATE busy|false
+Notification|$STATE notify|false
+Stop|$STATE idle|false
+SessionStart|$STATE idle|false
+SessionEnd|$STATE idle|false"
+
 command -v jq >/dev/null || {
-  echo "  jq not found — add Stop and Notification hooks running $CMD by hand"
+  echo "  jq not found — add these hooks to $F by hand (event, command):"
+  cut -d'|' -f1,2 <<<"$HOOKS" | sed 's/|/  /; s/^/    /'
   exit 0
 }
 
-has_hook() {
-  [ -f "$F" ] && jq -e --arg c "$CMD" \
-    '[.hooks // {} | .[][]?.hooks[]?.command] | index($c) != null' "$F" >/dev/null
+has_hook() {  # has_hook <event> <command>
+  [ -f "$F" ] && jq -e --arg e "$1" --arg c "$2" \
+    '[.hooks[$e] // [] | .[].hooks[]?.command] | index($c) != null' "$F" >/dev/null
 }
 
-write() {  # write <jq filter>
-  cp "$F" "$F.claudebro.bak.$(date +%Y%m%d%H%M%S)"
-  jq --arg c "$CMD" "$1" "$F" > "$F.claudebro.tmp"
-  mv "$F.claudebro.tmp" "$F"
+# settings.json may be a symlink (e.g. into a dotfiles repo): write the file
+# it points at, so the link survives. The backup goes next to the link.
+write() {  # write <jq filter> [jq args...]
+  local real filter="$1"; shift
+  real=$(readlink -f "$F")
+  cp "$real" "$F.claudebro.bak.$(date +%Y%m%d%H%M%S)"
+  jq "$@" "$filter" "$real" > "$real.claudebro.tmp"
+  mv "$real.claudebro.tmp" "$real"
 }
 
 case "${1:-}" in
   install)
-    if has_hook; then echo "  bell hooks already in $F — skipping"; exit 0; fi
     mkdir -p "$(dirname "$F")"
     [ -f "$F" ] || echo '{}' > "$F"
-    write '.hooks.Stop += [{"hooks": [{"type": "command", "command": $c, "async": true}]}]
-         | .hooks.Notification += [{"hooks": [{"type": "command", "command": $c, "async": true}]}]'
-    echo "  added Stop and Notification bell hooks to $F (backup kept)"
+    added=0
+    while IFS='|' read -r event cmd async; do
+      has_hook "$event" "$cmd" && continue
+      write '.hooks[$e] += [{"hooks": [{"type": "command", "command": $c, "async": ($a == "true")}]}]' \
+        --arg e "$event" --arg c "$cmd" --arg a "$async"
+      added=$((added + 1))
+    done <<<"$HOOKS"
+    if [ "$added" -eq 0 ]; then echo "  claudebro hooks already in $F — skipping"
+    else echo "  added $added claudebro hook(s) to $F (backup kept)"; fi
     ;;
   uninstall)
-    has_hook || exit 0
-    # Drop our hook entries, then any matcher group or event left empty.
-    write '.hooks |= (with_entries(.value |= (map(.hooks |= map(select(.command != $c)))
+    [ -f "$F" ] || exit 0
+    jq -e --arg r "$REPO/claude/" \
+      '[.hooks // {} | .[][]?.hooks[]?.command | select(startswith($r))] | length > 0' "$F" >/dev/null || exit 0
+    # Drop every hook running a script from claude/ here, then any matcher
+    # group or event left empty.
+    write '.hooks |= (with_entries(.value |= (map(.hooks |= map(select(.command | startswith($r) | not)))
                                              | map(select(.hooks | length > 0))))
-                     | with_entries(select(.value | length > 0)))'
-    echo "  removed bell hooks from $F (backup kept)"
+                     | with_entries(select(.value | length > 0)))' --arg r "$REPO/claude/"
+    echo "  removed claudebro hooks from $F (backup kept)"
     ;;
   *) echo "usage: $0 install|uninstall" >&2; exit 2 ;;
 esac
