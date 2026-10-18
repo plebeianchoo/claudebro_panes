@@ -70,12 +70,11 @@ Inside tmux, `ta` switches the current client instead of nesting a new one.
 | `Ctrl-b T` | team popup: one block per Claude pane in every session (window, state, idle time, title topic, last 4 lines) plus the `## Assigned` section of `~/workbench/.team/BOARD.md`; read-only, refreshes every 2s, `q` closes. `shell/team-glance.sh --once` prints it once |
 | `Ctrl-b C` | `team` window: a read-only live mirror pane per Claude pane (stacked, no shell panes), or switch to it if it exists; Enter in a mirror jumps to the real pane. Close it with `Ctrl-b &` |
 | `●` / `○` after a window name | that window's Claude is working (`●`) or idle (`○`, its pane title starts with `✳`); no glyph for windows without Claude. The status bar refreshes every 3s |
-| narrow screens (a phone) | under 100 columns (`set -g @cb_narrow_width N` to change) the bar goes compact: only the current window shows its name (cut to 5 characters), the others just number and `○`/`●`, and the clock, date and host go. `‹` `›` buttons appear at the start of the right side: tap them to scroll the window tabs a window at a time (tmux can't scroll its list, so tabs scrolled off draw as nothing; `shell/status-scroll.sh`). Switching windows resets the scroll. A wider client attached at the same time keeps the full bar |
+| narrow screens (a phone) | when the full tabs wouldn't fit the client's width (measured from the window names, plus `@cb_status_reserve`, default 32 columns, for the session name's arrows and the right side) the bar goes compact: only the current window shows its name (cut to 5 characters), the others just number and `○`/`●`. `‹` `›` buttons appear at the start of the right side: tap them to scroll the window tabs a window at a time (tmux can't scroll its list, so tabs scrolled off draw as nothing; `shell/status-scroll.sh`). Switching windows resets the scroll. A wider client attached at the same time keeps the full bar |
 | click session name (bottom left) | tmux's session list |
 | click `+` (bottom right) | prompt for a name (blank for the default), open a new window in this session with the Claude + shell layout, in the current pane's directory |
 | click `say` (bottom right) | the `Ctrl-b P` canned-prompts popup |
 | click the orange `N waiting` chip | the `Ctrl-b A` approvals popup. The chip shows while any Claude is on a prompt (counted every 3s by `shell/approvals.sh --status`) |
-| click an orange `name !` chip | picker, with that session at the top |
 
 Sessions created from a popup or button don't see `CLAUDEBRO_CMD` /
 `CLAUDEBRO_SPLIT` from your shell rc, only tmux's own environment.
@@ -132,9 +131,9 @@ same way, only inside the popups.
 
 With the hooks installed, Claude Code runs `claude/bell.sh` when it finishes
 a turn (`Stop`) or waits on a permission prompt (`Notification`). That rings
-the bell in Claude's pane; tmux flags the window, and every session with a
-flagged window shows as an orange `name !` chip at the bottom right until
-you visit it. No audible beep, and nothing for the window you're looking at.
+the bell in Claude's pane; tmux flags the window, and its tab turns orange
+with a `!` until you visit it. Other sessions' alerts show in the session
+picker (Ctrl-b j). No audible beep, and nothing for the window you're looking at.
 A session another client is looking at counts as seen, so it won't flag.
 Remove the hooks with `claude/hooks.sh uninstall` (or `./uninstall.sh`).
 
