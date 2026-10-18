@@ -10,7 +10,7 @@
 
 `<Ctrl b><P>`
 
-- claudebro: approvals popup, every Claude waiting on a prompt (1-9 answers, Esc cancels, arrows pick, Enter jumps; also the orange `N waiting` chip):
+- claudebro: approvals popup, a card per Claude waiting on a prompt (1-9 answers, Esc cancels, arrows pick, Space shows it in full, Enter jumps; also the orange `N waiting` chip):
 
 `<Ctrl b><A>`
 
