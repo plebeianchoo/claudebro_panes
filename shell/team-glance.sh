@@ -10,13 +10,15 @@ set -u
 board="${CLAUDEBRO_BOARD:-$HOME/workbench/.team/BOARD.md}"
 
 render() {
-  local cols="$1" now sid idx wname pane title act state idle topic
+  local cols="$1" now sid idx wname pane title act state idle topic cmd busy
   now=$(date +%s)
-  tmux list-panes -a -F '#{session_name}|#{window_index}|#{window_name}|#{pane_id}|#{window_activity}|#{pane_current_command}|#{pane_title}' |
-  while IFS='|' read -r sid idx wname pane act cmd title; do
+  tmux list-panes -a -F '#{session_name}|#{window_index}|#{window_name}|#{pane_id}|#{window_activity}|#{pane_current_command}|#{@cb_busy}|#{pane_title}' |
+  while IFS='|' read -r sid idx wname pane act cmd busy title; do
     [ "$cmd" = claude ] || continue
-    # Claude Code puts a star (✳) in the title when idle, a spinner otherwise.
-    case "$title" in "✳"*) state="○ idle" ;; *) state="● working" ;; esac
+    # @cb_busy is kept by claude/state.sh (the Claude Code hooks): 1 while a
+    # turn runs, wait at a permission prompt or question, unset when idle.
+    # The pane title can't tell: it starts with ✳ either way.
+    case "$busy" in wait) state="◆ needs you" ;; 1) state="● working" ;; *) state="○ idle" ;; esac
     topic="${title#* }"; [ "$topic" = "$title" ] && topic="$title"
     idle=$((now - act)); [ "$idle" -lt 0 ] && idle=0
     printf '\033[1m%s:%s %s\033[0m  %s  (activity %dm%02ds ago)\n' \
