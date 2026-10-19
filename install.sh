@@ -35,7 +35,9 @@ add_file_block() {  # add_file_block <file> <source-content-file>
       index($0, e) { skip = 0 }
       !skip        { print }
     ' "$file" > "$file.claudebro.tmp"
-    mv "$file.claudebro.tmp" "$file"
+    # `>` writes through a symlink (e.g. into a dotfiles repo); mv would
+    # replace the link with a plain file.
+    cat "$file.claudebro.tmp" > "$file" && rm -f "$file.claudebro.tmp"
     echo "  updated block in $file"
     return 0
   fi

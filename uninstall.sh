@@ -14,7 +14,8 @@ for f in "$HOME/.tmux.conf" "$HOME/.bashrc" "$HOME/.bash_aliases" "$HOME/.zshrc"
     !skip        { print }
     index($0, e) { skip = 0 }
   ' "$f" > "$f.claudebro.tmp"
-  mv "$f.claudebro.tmp" "$f"
+  # `>` writes through a symlink (dotfiles repos); mv would replace the link.
+  cat "$f.claudebro.tmp" > "$f" && rm -f "$f.claudebro.tmp"
   echo "removed block from $f (backup kept)"
 done
 REPO="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"

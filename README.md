@@ -33,8 +33,9 @@ so Claude Code knows it runs in the top pane and when (and how) to use the
 bottom one. That block is a copy, not a link: after a `git pull`, re-run
 `./install.sh` and answer `y` to refresh it. It then asks whether to add the
 bell hooks (below) to `~/.claude/settings.json`, merging with any hooks
-already there. It backs up anything it edits, is safe to re-run, and warns
-if `ta` or `tn` is already defined elsewhere. `./uninstall.sh` removes everything it added.
+already there. It backs up anything it edits, writes through symlinks (so rc files that
+link into a dotfiles repo stay links), is safe to re-run, and warns if `ta`
+or `tn` is already defined elsewhere. `./uninstall.sh` removes everything it added.
 
 Keep the clone where it is — the rc files source out of it by absolute path.
 
