@@ -137,6 +137,7 @@ a turn (`Stop`) or waits on a permission prompt (`Notification`). That rings
 the bell in Claude's pane; tmux flags the window, and its tab turns orange
 with a `!` until you visit it. Other sessions' alerts show in the session
 picker (Ctrl-b j). No audible beep, and nothing for the window you're looking at.
+The once-a-minute "waiting for your input" nudge doesn't ring; the turn's end already did.
 A session another client is looking at counts as seen, so it won't flag.
 The same install adds `claude/state.sh` on `UserPromptSubmit`, `PostToolUse`,
 `Notification`, `Stop`, `SessionStart` and `SessionEnd`: it keeps each
