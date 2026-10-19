@@ -19,8 +19,8 @@ Requires tmux 3.2+ (popups), `bash` or `zsh`, and `jq` for the Claude Code
 hooks. The popups and picker use `lazygit`, `btop` and `fzf` if installed.
 
 ```sh
-git clone git@github.com:plebeianchoo/claudebro_panes.git ~/claudebro/claudebro_panes
-cd ~/claudebro/claudebro_panes
+git clone git@github.com:plebeianchoo/claudebro_panes.git ~/code/claudebro/claudebro_panes
+cd ~/code/claudebro/claudebro_panes
 ./install.sh
 exec $SHELL -l
 ta
