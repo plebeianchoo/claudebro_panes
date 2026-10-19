@@ -18,7 +18,7 @@ render() {
     # @cb_busy is kept by claude/state.sh (the Claude Code hooks): 1 while a
     # turn runs, wait at a permission prompt or question, unset when idle.
     # The pane title can't tell: it starts with ✳ either way.
-    case "$busy" in wait) state="◆ needs you" ;; 1) state="● working" ;; *) state="○ idle" ;; esac
+    case "$busy" in wait) state="◆ needs you" ;; "") state="○ idle" ;; *) state="● working" ;; esac
     topic="${title#* }"; [ "$topic" = "$title" ] && topic="$title"
     idle=$((now - act)); [ "$idle" -lt 0 ] && idle=0
     printf '\033[1m%s:%s %s\033[0m  %s  (activity %dm%02ds ago)\n' \
